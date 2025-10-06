@@ -5,6 +5,7 @@ import { PuuidContext } from '../../contexts/PuuidContext';
 import { IconResult } from '../IconResult/IconResult';
 import { ItemsTable } from '../ItemsTable/ItemsTable';
 import { Spells } from '../Spells/Spells';
+import { Perks } from '../Perks/Perks';
 
 const getInfoPlayer = (infoMatch, puuid) => {
     const indexOfPlayer = infoMatch.metadata.participants.indexOf(puuid);
@@ -67,6 +68,7 @@ export const Match = memo(({ idMatch }) => {
             items: listItems,
             championConsumablesPurchased:
                 infoByPlayerInGame.consumablesPurchased,
+
             summoners: [
                 {
                     id: infoByPlayerInGame.summoner1Id,
@@ -132,12 +134,13 @@ export const Match = memo(({ idMatch }) => {
                         <Avatar.Fallback name="Champion" />
                     </Avatar.Root>
 
-                    <Card.Title mb="2">
+                    <Card.Title mb="2" margin={0}>
                         <Flex direction="row">
                             <Text>{statistics.championName} </Text>
                             <Text>
                                 {statistics.gameMode === 'CLASSIC' ? (
                                     <Image
+                                        widows={"30px"}
                                         src={`https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-static-assets/global/default/svg/position-${statistics.position}-light.svg`}
                                     />
                                 ) : (
@@ -145,6 +148,7 @@ export const Match = memo(({ idMatch }) => {
                                 )}
                             </Text>
                         </Flex>
+                        <Perks listPerks={statistics.perks}></Perks>
                     </Card.Title>
                 </Flex>
                 <Flex
@@ -159,6 +163,7 @@ export const Match = memo(({ idMatch }) => {
                 </Flex>
                 <Flex justifyContent={'center'} marginTop={2} gap={1}>
                     <Spells listSpells={statistics.summoners} />
+
                     <ItemsTable listItems={statistics.items.slice(0, -1)} />
                     <ItemsTable listItems={statistics.items.slice(-1)} />
                 </Flex>

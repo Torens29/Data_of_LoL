@@ -20,7 +20,7 @@ export const History = () => {
 
     return (
         <>
-            <Flex gap="4" wrap='wrap'  width="1200px" justify={"center"}>
+            <Flex gap="4" wrap='wrap'  width="1500px" justify={"center"}>
                 <For each={listMatches} fallback={<div>No matches</div>}>
                     {(idMatch) => (
                         <Match key={idMatch} idMatch={idMatch}></Match>

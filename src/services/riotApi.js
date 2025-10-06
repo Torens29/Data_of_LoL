@@ -55,7 +55,7 @@ export const getLeagues = async (puuid) => {
 };
 
 export const getHistoryMatches = async (puuid) => {
-    const sizeHistory = 1;
+    const sizeHistory = 5;
     const url = `/lol/match/v5/matches/by-puuid/${puuid}/ids?count=${sizeHistory}`;
     const response = await makeRequest({ url, type: 'account' });
 

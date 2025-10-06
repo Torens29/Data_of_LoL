@@ -4,22 +4,28 @@ import { History } from './components/History/History';
 import { PuuidContext } from './contexts/PuuidContext';
 import { useEffect, useMemo, useState } from 'react';
 
+const listImportsDynamic = [
+    'infoItems.json',
+    'infoSpells.json',
+    'infoPerks.json',
+];
+
 function App() {
     const [puuid, setPuuid] = useState('');
     const [infoItems, setInfoItems] = useState(null);
     const [infoSpells, setInfoSpells] = useState(null);
+    const [infoPerks, setInfoPerks] = useState(null);
 
     useEffect(() => {
         const handleInfoItems = async () => {
             try {
-                let module = await import('./assets/data/infoItems.json');
-                let infoJSON = module.default;
-                setInfoItems(infoJSON);
-
-                module = await import('./assets/data/infoSpells.json');
-                infoJSON = module.default;
-                setInfoSpells(infoJSON);
-
+                listImportsDynamic.map(async (importName, index) => {
+                    let module = await import(`./assets/data/${importName}`);
+                    let infoJSON = module.default;
+                    [setInfoItems, setInfoSpells, setInfoPerks][index](
+                        infoJSON
+                    );
+                });
             } catch (err) {
                 console.error('Ошибка загрузки JSON:', err);
             }
@@ -29,8 +35,8 @@ function App() {
     }, []);
 
     const contextValue = useMemo(
-        () => ({ puuid, setPuuid, infoItems, infoSpells }),
-        [infoItems, puuid, infoSpells]
+        () => ({ puuid, setPuuid, infoItems, infoSpells, infoPerks }),
+        [infoItems, puuid, infoSpells, infoPerks]
     );
 
     return (
