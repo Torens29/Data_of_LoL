@@ -1,4 +1,4 @@
-import { Card, Avatar, Text, Flex, Image} from '@chakra-ui/react';
+import { Card, Avatar, Text, Flex, Image } from '@chakra-ui/react';
 import { useContext, useEffect, useState, useMemo, memo } from 'react';
 import { getMatchById } from '../../services/riotApi';
 import { PuuidContext } from '../../contexts/PuuidContext';
@@ -16,11 +16,16 @@ const getInfoPlayer = (infoMatch, puuid) => {
 
 const getDuration = (time) => {
     const [min, sec] = (time / 60).toString().split('.');
+    let secIn60 = (sec * 0.6).toString();
+    if (secIn60.includes('.')) {
+        secIn60 = secIn60.replace('.', '');
+    }
+    if (secIn60.length === 1) secIn60 = `0${secIn60}`;
 
-    return `${min}:${((sec / 100) * 60).toString().slice(0, 2)}`;
+    return `${min}:${secIn60.slice(0, 2)}`;
 };
 
-export const Match = memo(({ idMatch }) => {
+export const Match = memo(({ idMatch, onMatchClick }) => {
     const { puuid } = useContext(PuuidContext);
     const [infoMatch, setInfoMatch] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -89,12 +94,14 @@ export const Match = memo(({ idMatch }) => {
         };
     }, [infoMatch, puuid]);
 
-    console.log(
-        'summoners',
-        statistics?.summoners,
-        statistics?.championConsumablesPurchased
-    );
-    
+    const handleClick = () => {
+        const matchData = {
+            id: idMatch,
+            info: infoMatch,
+        };
+
+        onMatchClick(matchData);
+    };
 
     if (loading) {
         return (
@@ -114,6 +121,12 @@ export const Match = memo(({ idMatch }) => {
 
     return (
         <Card.Root
+            onClick={handleClick}
+            cursor="pointer"
+            _hover={{
+                transform: 'translateY(-10px)',
+                transition: 'all 0.2s',
+            }}
             style={{ background: statistics.win ? '#a4cea2ff' : '#ffb2b2' }}
         >
             <Card.Header>
@@ -140,7 +153,7 @@ export const Match = memo(({ idMatch }) => {
                             <Text>
                                 {statistics.gameMode === 'CLASSIC' ? (
                                     <Image
-                                        widows={"30px"}
+                                        widows={'30px'}
                                         src={`https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-static-assets/global/default/svg/position-${statistics.position}-light.svg`}
                                     />
                                 ) : (
