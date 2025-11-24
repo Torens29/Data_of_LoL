@@ -47,6 +47,11 @@ export interface LeagueEntryDTO {
 }
 
 // Типы для Match API
+export interface IMatchData {
+    id: string;
+    info: MatchDTO | null;
+}
+
 export type MatchList = string[];
 
 export interface MatchDTO {

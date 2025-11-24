@@ -1,9 +1,9 @@
 import { AbsoluteCenter, Box, Flex } from '@chakra-ui/react';
 import { Search } from './components/Search/Search';
 import { History } from './components/History/History';
-import { PuuidContext } from './contexts/PuuidContext';
+import { PuuidContext } from './contexts/PuuidContext.js';
 import { useEffect, useMemo, useState } from 'react';
-import type { IItems, IPerks, ISpells } from './assets/data/typeOfInfo';
+import type { IItems, IPerks, ISpells } from './assets/data/typeOfInfo.js';
 
 const jsonFiles = [
     { name: 'infoItems.json', setter: 'setInfoItems' },

@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import type { IItems, IPerks, ISpells } from '../assets/data/typeOfInfo.js';
 
 interface IPuuidContext {
@@ -10,3 +10,13 @@ interface IPuuidContext {
 }
 
 export const PuuidContext = createContext<IPuuidContext | undefined>(undefined);
+
+export const usePuuid = (): IPuuidContext => {
+    const context = useContext(PuuidContext);
+
+    if (context === undefined) {
+        throw new Error('usePuuid must be used within a PuuidProvider');
+    }
+
+    return context;
+};
