@@ -1,12 +1,17 @@
-import { Match } from '../Match/Match';
-import { PuuidContext } from '../../contexts/PuuidContext';
+import { Match } from '../Match/Match.jsx';
+import { PuuidContext } from '../../contexts/PuuidContext.js';
 import { useContext, useEffect, useState } from 'react';
-import { getHistoryMatches } from '../../services/riotApi';
+import { getHistoryMatches } from '../../services/riotApi.js';
 import { Flex, For } from '@chakra-ui/react';
-import { Modal } from '../Modal/Modal';
+import { Modal } from '../Modal/Modal.js';
 
 export const History = () => {
-    const { puuid } = useContext(PuuidContext);
+    const context = useContext(PuuidContext);
+    if (!context)
+        throw new Error('useContext must be used within a PuuidProvider');
+
+    const { puuid } = context;
+
     const [listMatches, setListMatches] = useState([]);
 
     const [dataMatch, setDataMatch] = useState(null);
