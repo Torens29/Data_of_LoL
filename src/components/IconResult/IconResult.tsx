@@ -1,6 +1,11 @@
 import { Text, Flex, Box } from '@chakra-ui/react';
 
-export const IconResult = ({ isWin, gameMode }) => {
+interface IIconResult {
+    isWin: boolean,
+    gameMode: string,
+}
+
+export const IconResult = ({ isWin, gameMode}: IIconResult) => {
     const resultGame = isWin ? 'Victory' : 'Defeat';
     const dirGameMode = gameMode === "CLASSIC" ? 'classic_sru' : 'aram';
     const srcVideo = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/content/src/leagueclient/gamemodeassets/${dirGameMode}/video/icon-${resultGame.toLocaleLowerCase()}.webm`;
@@ -8,7 +13,7 @@ export const IconResult = ({ isWin, gameMode }) => {
     return (
         <Flex direction={'row'} align={'center'}>
             <Box
-                as={'video'}
+                as='video'
                 src={srcVideo}
                 loop
                 autoPlay

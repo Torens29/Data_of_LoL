@@ -18,26 +18,26 @@ export const Perks = ({ listPerks }) => {
     const { infoPerks } = useContext(PuuidContext);
 
     // const [statPerks, setStatPerks] = useState(listPerks.statPerks);
-    const [primaryStyle, setPrimaryStyle] = useState(
+    const [primaryStyle] = useState(
         listPerks.styles[0].selections
     );
-    const [subStyle, setSubStyle] = useState(listPerks.styles[1].selections);
+    const [subStyle] = useState(listPerks.styles[1].selections);
 
-    const statPerks = useMemo(() => {
-        const arr = [];
-        for (const id in listPerks.statPerks) {
-            arr.push(listPerks.statPerks[id]); //{ perk: id }
-        }
+    // const statPerks = useMemo(() => {
+    //     const arr = [];
+    //     for (const id in listPerks.statPerks) {
+    //         arr.push(listPerks.statPerks[id]); //{ perk: id }
+    //     }
         
-        return arr;
-    }, [listPerks.statPerks]);
+    //     return arr;
+    // }, [listPerks.statPerks]);
 
     if (!listPerks) return <></>;
 
     return (
         <Tooltip
             content={
-                <Flex direction={'column'} align={'center'}>
+                <Flex direction={'column'} align={'center'} className='perk'>
                     <Box className="main">
                         <Image
                             width={'40px'}
@@ -62,7 +62,7 @@ export const Perks = ({ listPerks }) => {
                         <For each={subStyle}>
                             {(id, index) => (
                                 <Image
-                                    key={id + index}
+                                    key={+id + index}
                                     width={'30px'}
                                     src={getPathIcons(infoPerks, id)}
                                 ></Image>

@@ -1,5 +1,5 @@
 import { Button, CloseButton, Dialog, Portal } from '@chakra-ui/react';
-import { MatchDetails } from '../MatchDetails/MatchDetails';
+import { MatchDetails } from '../MatchDetails/MatchDetails.jsx';
 
 export const Modal = ({ matchData, isModalOpen, closeModal }) => {
     return (
