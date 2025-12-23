@@ -1,7 +1,17 @@
 import { Button, CloseButton, Dialog, Portal } from '@chakra-ui/react';
-import { MatchDetails } from '../MatchDetails/MatchDetails.jsx';
+import { MatchDetails } from '../MatchDetails/MatchDetails.js';
+import type { MatchDTO } from '../../services/typesApi.js';
 
-export const Modal = ({ matchData, isModalOpen, closeModal }) => {
+interface ModalProps {
+    matchData: {
+        id: string;
+        info: MatchDTO | null;
+    } | null;
+    isModalOpen: boolean;
+    closeModal: () => void;
+}
+
+export const Modal = ({ matchData, isModalOpen, closeModal } : ModalProps) => {
     return (
         <Dialog.Root
             placement={'center'}

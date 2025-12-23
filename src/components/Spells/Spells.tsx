@@ -2,19 +2,36 @@ import { Image, For, Grid, Box } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { PuuidContext } from '../../contexts/PuuidContext';
 import { Tooltip } from '../Tooltip/Tooltip';
+import type { ISpells } from '../../assets/data/typeOfInfo';
 
-const findSpellsIcon = (infoSpells, idSpell) => {
+interface SpellsProps {
+    listSpells: Array<{
+        id: number | undefined;
+        countCast: number | undefined;
+    }>;
+}
+
+const findSpellsIcon = (infoSpells: ISpells | null, idSpell: number) => {
     const url = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/`;
 
     if (infoSpells === null) return 'non item';
+
     const spell = infoSpells.find((spell) => spell.id === idSpell);
 
-    const fullURL = url + spell.iconPath?.split('/').at(-1).toLowerCase();
-    return fullURL;
+    if (!spell) return '';
+
+     const iconFileName = spell.iconPath?.split('/').pop()?.toLowerCase();
+     if (!iconFileName) return '';
+
+     return url + iconFileName;
 };
 
-export const Spells = ({ listSpells }) => {
-    const { infoSpells } = useContext(PuuidContext);
+export const Spells = ({listSpells}: SpellsProps) => {
+    const context = useContext(PuuidContext);
+    if (!context)
+        throw new Error('useContext must be used within a PuuidProvider');
+
+    const { infoSpells } = context;
 
     return (
         <Grid
@@ -30,7 +47,7 @@ export const Spells = ({ listSpells }) => {
             <For each={listSpells} fallback="none items">
                 {(infoSpell) => (
                     <Box
-                        key={infoSpell.id}
+                        key={String(infoSpell.id)}
                         borderWidth={1}
                         borderColor={'black'}
                         borderRadius={'md'}
@@ -47,7 +64,7 @@ export const Spells = ({ listSpells }) => {
                                               infoSpells,
                                               Number(infoSpell.id)
                                           )
-                                        : null
+                                        : undefined
                                 }
                                 htmlWidth={33}
                             />

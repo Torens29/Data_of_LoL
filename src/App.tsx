@@ -1,5 +1,5 @@
 import { AbsoluteCenter, Box, Flex } from '@chakra-ui/react';
-import { Search } from './components/Search/Search';
+import { Search } from './components/Search/Search.js';
 import { History } from './components/History/History';
 import { PuuidContext } from './contexts/PuuidContext.js';
 import { useEffect, useMemo, useState } from 'react';

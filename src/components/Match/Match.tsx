@@ -1,17 +1,24 @@
-import { Card, Avatar, Text, Flex, Image } from '@chakra-ui/react';
-import { useContext, useEffect, useState, useMemo, memo } from 'react';
+import { Card, Text, Flex, Image } from '@chakra-ui/react';
+import { Avatar } from '@chakra-ui/react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { getMatchById } from '../../services/riotApi.js';
-import { PuuidContext, usePuuid } from '../../contexts/PuuidContext.js';
+import { usePuuid } from '../../contexts/PuuidContext.js';
 import { IconResult } from '../IconResult/IconResult.js';
 import { ItemsTable } from '../ItemsTable/ItemsTable.js';
-import { Spells } from '../Spells/Spells.jsx';
+import { Spells } from '../Spells/Spells.js';
 import { Perks } from '../Perks/Perks.js';
-import type { IMatchData, MatchDTO } from '../../services/typesApi.js';
+
+import type {
+    IMatchData,
+    MatchDTO,
+    ParticipantDTO,
+} from '../../services/typesApi.js';
 
 const getInfoPlayer = (infoMatch: MatchDTO, puuid: string) => {
     const indexOfPlayer = infoMatch.metadata.participants.indexOf(puuid);
 
     if (indexOfPlayer === -1) return undefined;
+
     return infoMatch.info.participants[indexOfPlayer];
 };
 
@@ -68,10 +75,15 @@ export const Match = memo(
 
             const infoByPlayerInGame = getInfoPlayer(infoMatch, puuid);
 
-            
-            const listItems = Array(7)
-                .fill('item')
-                .map((item, i) => infoByPlayerInGame[item + i]);
+            const listItems: number[] = Array(7)
+                .fill(null)
+                .map((_, i) => {
+                    if (!infoByPlayerInGame) return 0;
+
+                    return infoByPlayerInGame[
+                        ('item' + i) as keyof ParticipantDTO
+                    ] as number;
+                });
 
             return {
                 championName: infoByPlayerInGame?.championName,
@@ -146,7 +158,7 @@ export const Match = memo(
                 <Card.Header>
                     <Flex justify="space-between" gap="40px" align={'center'}>
                         <IconResult
-                            isWin={statistics.win}
+                            isWin={statistics.win === true}
                             gameMode={statistics.gameMode}
                         />
                         <div>{statistics.gameDuration}</div>
@@ -157,6 +169,12 @@ export const Match = memo(
                         <Avatar.Root size="lg" shape="rounded">
                             <Avatar.Image
                                 src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${statistics.championId}.png`}
+                                onError={(e) => {
+                                    // Обработка ошибки загрузки изображения
+                                    console.error(
+                                        'Failed to load champion icon' + e
+                                    );
+                                }}
                             />
                             <Avatar.Fallback name="Champion" />
                         </Avatar.Root>
