@@ -2,42 +2,56 @@ import { Box, Flex, Image, For, Center } from '@chakra-ui/react';
 import { useContext, useMemo, useState } from 'react';
 import { PuuidContext } from '../../contexts/PuuidContext';
 import { Tooltip } from '../Tooltip/Tooltip';
+import type { PerksDTO } from '../../services/typesApi';
+import type { IPerks } from '../../assets/data/typeOfInfo';
 
-const getPathIcons = (listPerks, idPerks) => {
+const getPathIcons = (
+    listPerks: IPerks[] | null,
+    idPerks:
+        | {
+              perk: number;
+              var1: number;
+              var2: number;
+              var3: number;
+          }
+        | undefined
+) => {
     const url = `https://raw.communitydragon.org/latest/game/assets/perks/`; // styles statmodshealthplusicon.png
 
     if (listPerks === null) return 'non item';
-    const perk = listPerks.find((perks) => perks.id === idPerks.perk);
+    const perk = listPerks.find((perks) => perks.id === idPerks?.perk);
 
     const fullURL =
-        url + perk.iconPath?.split('/').slice(-4).join('/').toLowerCase();
+        url + perk?.iconPath?.split('/').slice(-4).join('/').toLowerCase();
     return fullURL;
 };
 
-export const Perks = ({ listPerks }) => {
-    const { infoPerks } = useContext(PuuidContext);
+export const Perks = ({ listPerks }: { listPerks: PerksDTO | undefined }) => {
+    const context = useContext(PuuidContext);
+    if (!context)
+        throw new Error('useContext must be used within a PuuidProvider');
+
+    const { infoPerks } = context;
 
     // const [statPerks, setStatPerks] = useState(listPerks.statPerks);
-    const [primaryStyle, setPrimaryStyle] = useState(
-        listPerks.styles[0].selections
-    );
-    const [subStyle, setSubStyle] = useState(listPerks.styles[1].selections);
+    const [primaryStyle] = useState(listPerks?.styles?.[0]?.selections ?? []);
+    const [subStyle] = useState(listPerks?.styles?.[1]?.selections);
 
-    const statPerks = useMemo(() => {
-        const arr = [];
-        for (const id in listPerks.statPerks) {
-            arr.push(listPerks.statPerks[id]); //{ perk: id }
-        }
-        
-        return arr;
-    }, [listPerks.statPerks]);
+    // const statPerks = useMemo(() => {
+    //     const arr = [];
+    //     for (const id in listPerks.statPerks) {
+    //         arr.push(listPerks.statPerks[id]); //{ perk: id }
+    //     }
+
+    //     return arr;
+    // }, [listPerks.statPerks]);
 
     if (!listPerks) return <></>;
 
     return (
         <Tooltip
             content={
-                <Flex direction={'column'} align={'center'}>
+                <Flex direction={'column'} align={'center'} className="perk">
                     <Box className="main">
                         <Image
                             width={'40px'}
@@ -48,11 +62,13 @@ export const Perks = ({ listPerks }) => {
                         <For each={[1, 2, 3]}>
                             {(item) => (
                                 <Image
-                                    key={primaryStyle[item] + item}
+                                    key={`perk-${
+                                        primaryStyle?.[item]?.perk ?? 'unknown'
+                                    }-${item}`}
                                     width={'30px'}
                                     src={getPathIcons(
                                         infoPerks,
-                                        primaryStyle[item]
+                                        primaryStyle?.[item]
                                     )}
                                 ></Image>
                             )}
@@ -62,7 +78,7 @@ export const Perks = ({ listPerks }) => {
                         <For each={subStyle}>
                             {(id, index) => (
                                 <Image
-                                    key={id + index}
+                                    key={+id + index}
                                     width={'30px'}
                                     src={getPathIcons(infoPerks, id)}
                                 ></Image>
@@ -91,7 +107,7 @@ export const Perks = ({ listPerks }) => {
                     <Image
                         width={'20px'}
                         height={'20px'}
-                        src={getPathIcons(infoPerks, subStyle[0])}
+                        src={getPathIcons(infoPerks, subStyle?.[0])}
                     />
                 </Flex>
             </Box>

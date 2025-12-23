@@ -1,8 +1,24 @@
 import { Tooltip as ChakraTooltip, Portal } from '@chakra-ui/react';
-import * as React from 'react';
+import React, { forwardRef } from 'react';
 
+export interface TooltipProps extends ChakraTooltip.RootProps {
+    /** Контент тултипа */
+    content: React.ReactNode;
+    /** Дочерний элемент, на который будет наведен тултип */
+    children: React.ReactNode;
+    /** Показывать стрелку */
+    showArrow?: boolean;
+    /** Отключить тултип */
+    disabled?: boolean;
+    /** Использовать Portal для рендера */
+    portalled?: boolean;
+    /** Дополнительные props для контента */
+    contentProps?: ChakraTooltip.ContentProps;
+    /** Ref для Portal контейнера */
+    portalRef?: React.RefObject<HTMLElement>;
+}
 
-export const Tooltip = (
+export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     function Tooltip(props, ref) {
         const {
             showArrow,
@@ -15,7 +31,7 @@ export const Tooltip = (
             ...rest
         } = props;
 
-        if (disabled) return children;
+        if (disabled) return <>{children}</>;
 
         return (
             <ChakraTooltip.Root {...rest}>
@@ -38,3 +54,6 @@ export const Tooltip = (
         );
     }
 );
+
+// Добавьте displayName для лучшей отладки
+Tooltip.displayName = 'Tooltip';

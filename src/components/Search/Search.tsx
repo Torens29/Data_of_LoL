@@ -13,7 +13,12 @@ import { PuuidContext } from '../../contexts/PuuidContext';
 export const Search = () => {
     const [username, setUsername] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { setPuuid } = useContext(PuuidContext);
+
+    const context = useContext(PuuidContext);
+    if (!context)
+        throw new Error('useContext must be used within a PuuidProvider');
+
+    const { setPuuid } = context;
 
     const handleSearch = async () => {
         setIsLoading(true);
@@ -22,8 +27,9 @@ export const Search = () => {
         const [gameName, tagLine] = nik.split('#');
 
         const puuid = await getPUUID(gameName, tagLine);
-        
+
         setPuuid(puuid);
+        setIsLoading(false);
     };
 
     return (
@@ -46,7 +52,7 @@ export const Search = () => {
                     </Field.Root>
                 </Fieldset.Content>
 
-                <Button isLoading={isLoading} onClick={handleSearch}>
+                <Button loading={isLoading} onClick={handleSearch}>
                     Найти
                 </Button>
             </Flex>
