@@ -43,6 +43,7 @@ export const Spells = ({listSpells}: SpellsProps) => {
             borderRadius={'md'}
             borderColor={'black'}
             bg={'gray.500'}
+            minW={33}
         >
             <For each={listSpells} fallback="none items">
                 {(infoSpell) => (
