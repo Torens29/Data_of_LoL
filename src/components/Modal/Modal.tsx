@@ -1,6 +1,7 @@
 import { Button, CloseButton, Dialog, Portal } from '@chakra-ui/react';
 import { MatchDetails } from '../MatchDetails/MatchDetails.js';
 import type { MatchDTO } from '../../services/typesApi.js';
+import { getDuration } from '../../utils/getDuration.js';
 
 interface ModalProps {
     matchData: {
@@ -22,9 +23,11 @@ export const Modal = ({ matchData, isModalOpen, closeModal } : ModalProps) => {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content>
+                    <Dialog.Content minWidth="1000px">
                         <Dialog.Header>
-                            <Dialog.Title>Детали матча</Dialog.Title>
+                            <Dialog.Title>
+                                Детали матча {getDuration(matchData?.info?.info.gameDuration ?? 0)}
+                            </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
                             {isModalOpen && (

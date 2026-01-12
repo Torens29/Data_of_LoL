@@ -41,6 +41,8 @@ export const ItemsTable = ({ listItems }: { listItems: number[] }) => {
                         borderWidth={1}
                         borderColor={'black'}
                         borderRadius={'md'}
+                        minH={30}
+                        minW={30}
                     >
                         <Image
                             key={`imgItem-${idItem}-${idx}`}
