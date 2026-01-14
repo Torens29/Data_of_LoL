@@ -6,7 +6,7 @@ import {
     Flex,
     Heading,
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { getPUUID } from '../../services/riotApi';
 import { PuuidContext } from '../../contexts/PuuidContext';
 
@@ -20,7 +20,7 @@ export const Search = () => {
 
     const { setPuuid } = context;
 
-    const handleSearch = async () => {
+    const handleSearch = useCallback(async () => {
         setIsLoading(true);
         const nik = username === '' ? 'JGL#4171' : username;
 
@@ -30,7 +30,7 @@ export const Search = () => {
 
         setPuuid(puuid);
         setIsLoading(false);
-    };
+    }, [username, setPuuid]);
 
     return (
         <Fieldset.Root width="300px">

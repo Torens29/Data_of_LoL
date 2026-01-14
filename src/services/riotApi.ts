@@ -96,8 +96,10 @@ export const getLeagues = async (puuid: string): Promise<LeagueEntryDTO[]> => {
     return response;
 };
 
-export const getHistoryMatches = async (puuid: string): Promise<MatchList> => {
-    const sizeHistory = 5;
+export const getHistoryMatches = async (
+    puuid: string,
+    sizeHistory: number = 5
+): Promise<MatchList> => {
     const url = `/lol/match/v5/matches/by-puuid/${puuid}/ids?count=${sizeHistory}`;
     const response = await makeRequest<MatchList>({ url, type: 'account' });
 
@@ -121,7 +123,6 @@ export const getCurrentGame = async (
 
     return response;
 };
-
 
 // инфа предмета по ID
 // export const getInfoItems = async () => {

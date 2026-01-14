@@ -1,7 +1,10 @@
-import { Avatar, Flex, For, Table, Text } from '@chakra-ui/react';
+import { Avatar, Button, Flex, For, Table, Text } from '@chakra-ui/react';
 import type { ParticipantDTO } from '../../services/typesApi';
 import { ItemsTable } from '../ItemsTable/ItemsTable';
 import { Spells } from '../Spells/Spells';
+import { useContext, useState } from 'react';
+import { searchJointMatches } from '../MatchesJoint/MatchesJoint';
+import { PuuidContext } from '../../contexts/PuuidContext';
 
 const TableOfTeam = ({
     infoByPlayers,
@@ -10,6 +13,13 @@ const TableOfTeam = ({
     infoByPlayers: ParticipantDTO[] | undefined;
     colorTeam: 'blue' | 'red';
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const context = useContext(PuuidContext);
+    if (!context)
+        throw new Error('useContext must be used within a PuuidProvider');
+
+    const { puuid } = context;
+
     return (
         <>
             <Table.Root
@@ -45,9 +55,26 @@ const TableOfTeam = ({
                                         />
                                         <Avatar.Fallback name="Champion" />
                                     </Avatar.Root>
-                                    {player.championName}
-                                    <br />
-                                    {`${player.riotIdGameName}#${player.riotIdTagline}`}
+                                    <Flex direction={'column'}>
+                                        <div>{player.championName}</div>
+                                        <div>{`${player.riotIdGameName}#${player.riotIdTagline}`}</div>
+                                        <Button
+                                            loading={isLoading}
+                                            onClick={() =>
+                                                searchJointMatches({
+                                                    puuidMainPlayer: puuid,
+                                                    puuidSecondPlayer:
+                                                        player.puuid,
+                                                })
+                                            }
+                                            size="2xs"
+                                            variant="ghost"
+                                            colorPalette={'gray'}
+                                            maxW={40}
+                                        >
+                                            Общие матчи
+                                        </Button>
+                                    </Flex>
                                 </Flex>
                             </Table.Cell>
                             <Table.Cell>
@@ -88,7 +115,12 @@ const TableOfTeam = ({
                             <Table.Cell textAlign="end">
                                 {`${player.assists}/${player.deaths}/${player.kills}`}
                                 <br />
-                                {`${player.totalMinionsKilled+player.neutralMinionsKilled}=${player.totalMinionsKilled}+${player.neutralMinionsKilled}`}
+                                {`${
+                                    player.totalMinionsKilled +
+                                    player.neutralMinionsKilled
+                                }=${player.totalMinionsKilled}+${
+                                    player.neutralMinionsKilled
+                                }`}
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -107,17 +139,15 @@ export const TableOfMatchDetails = ({
     infoByPlayers: ParticipantDTO[] | undefined;
 }) => (
     <>
-    <Flex>
-        <TableOfTeam
-            infoByPlayers={infoByPlayers?.slice(0, 5)}
-            colorTeam={'blue'}
-
-        />
-        <TableOfTeam
-            infoByPlayers={infoByPlayers?.slice(5, 10)}
-            colorTeam={'red'}
-        />
-    </Flex>
-        
+        <Flex>
+            <TableOfTeam
+                infoByPlayers={infoByPlayers?.slice(0, 5)}
+                colorTeam={'blue'}
+            />
+            <TableOfTeam
+                infoByPlayers={infoByPlayers?.slice(5, 10)}
+                colorTeam={'red'}
+            />
+        </Flex>
     </>
 );
