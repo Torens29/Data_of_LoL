@@ -4,6 +4,7 @@ import { History } from './components/History/History';
 import { PuuidContext } from './contexts/PuuidContext.js';
 import { useEffect, useMemo, useState } from 'react';
 import type { IItems, IPerks, ISpells } from './assets/data/typeOfInfo.js';
+import { getHistoryMatches } from './services/riotApi.js';
 
 const jsonFiles = [
     { name: 'infoItems.json', setter: 'setInfoItems' },
@@ -15,7 +16,21 @@ function App() {
     const [puuid, setPuuid] = useState<string>('');
     const [infoItems, setInfoItems] = useState<IItems | null>(null);
     const [infoSpells, setInfoSpells] = useState<ISpells | null>(null);
-    const [infoPerks, setInfoPerks] = useState<IPerks | null>(null);
+    const [infoPerks, setInfoPerks] = useState<IPerks[] | null>(null);
+    const [matchHistory, setMatchHistory] = useState<string[]>([]);
+
+    useEffect(() => {
+        const handleHistoryMatch = async () => {
+            try {
+                const history = await getHistoryMatches(puuid, 100);
+                setMatchHistory(history);
+            } catch (e) {
+                throw e;
+            }
+        };
+        
+        handleHistoryMatch();
+    }, [puuid, setMatchHistory]);
 
     useEffect(() => {
         const handleInfoItems = async () => {
@@ -32,7 +47,7 @@ function App() {
                             setInfoSpells(data as ISpells);
                             break;
                         case 'setInfoPerks':
-                            setInfoPerks(data as IPerks);
+                            setInfoPerks(data as IPerks[]);
                             break;
                     }
                 });
@@ -47,8 +62,15 @@ function App() {
     }, []);
 
     const contextValue = useMemo(
-        () => ({ puuid, setPuuid, infoItems, infoSpells, infoPerks }),
-        [infoItems, puuid, infoSpells, infoPerks]
+        () => ({
+            puuid,
+            setPuuid,
+            infoItems,
+            infoSpells,
+            infoPerks,
+            matchHistory,
+        }),
+        [infoItems, puuid, infoSpells, infoPerks, matchHistory]
     );
 
     return (

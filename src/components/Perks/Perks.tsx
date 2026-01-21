@@ -26,25 +26,21 @@ const getPathIcons = (
     return fullURL;
 };
 
-export const Perks = ({ listPerks }: { listPerks: PerksDTO | undefined }) => {
+export const Perks = ({
+    listPerks,
+    idMatch,
+}: {
+    listPerks: PerksDTO | undefined,
+    idMatch: string;
+}) => {
     const context = useContext(PuuidContext);
     if (!context)
         throw new Error('useContext must be used within a PuuidProvider');
 
     const { infoPerks } = context;
 
-    // const [statPerks, setStatPerks] = useState(listPerks.statPerks);
     const [primaryStyle] = useState(listPerks?.styles?.[0]?.selections ?? []);
     const [subStyle] = useState(listPerks?.styles?.[1]?.selections);
-
-    // const statPerks = useMemo(() => {
-    //     const arr = [];
-    //     for (const id in listPerks.statPerks) {
-    //         arr.push(listPerks.statPerks[id]); //{ perk: id }
-    //     }
-
-    //     return arr;
-    // }, [listPerks.statPerks]);
 
     if (!listPerks) return <></>;
 
@@ -62,7 +58,7 @@ export const Perks = ({ listPerks }: { listPerks: PerksDTO | undefined }) => {
                         <For each={[1, 2, 3]}>
                             {(item) => (
                                 <Image
-                                    key={`perk-${
+                                    key={`${idMatch}-perk-${
                                         primaryStyle?.[item]?.perk ?? 'unknown'
                                     }-${item}`}
                                     width={'30px'}
@@ -78,22 +74,13 @@ export const Perks = ({ listPerks }: { listPerks: PerksDTO | undefined }) => {
                         <For each={subStyle}>
                             {(id, index) => (
                                 <Image
-                                    key={+id + index}
+                                    key={id.perk}
                                     width={'30px'}
                                     src={getPathIcons(infoPerks, id)}
                                 ></Image>
                             )}
                         </For>
                     </Flex>
-                    {/* <Box className="statPerks">
-                        <For each={statPerks}>
-                            {(id) => (
-                                <Image
-                                    src={getPathIcons(infoPerks, id)}
-                                ></Image>
-                            )}
-                        </For>
-                    </Box> */}
                 </Flex>
             }
         >

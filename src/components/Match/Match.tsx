@@ -181,7 +181,10 @@ export const Match = memo(
                                     )}
                                 </Text>
                             </Flex>
-                            <Perks listPerks={statistics.perks}></Perks>
+                            <Perks
+                                listPerks={statistics.perks}
+                                idMatch={idMatch}
+                            ></Perks>
                         </Card.Title>
                     </Flex>
                     <Flex
